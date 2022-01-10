@@ -1,0 +1,12 @@
+# libaries for scrapers
+BeautifulSoup4==4.9.3
+selenium==3.141.0
+Scrapy==2.5.0
+scrapy-user-agents==0.1.1
+
+# data handling
+validators==0.18.2
+pandas==1.2.4
+thefuzz==0.19.0
+regex==2021.11.10
+nltk==3.6.5
