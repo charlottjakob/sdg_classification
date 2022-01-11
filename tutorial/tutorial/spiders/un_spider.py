@@ -8,7 +8,7 @@ class UNSpider(scrapy.Spider):
     allowed_domains = ['sdgs.un.org']
     custom_settings = {
         "ITEM_PIPELINES": {
-            "tutorial.tutorial.pipelines.UNPipeline": 300,
+            "tutorial.tutorial.pipelines.BasicPipeline": 300,
         },
         "FEEDS": {
             "files/un_data.csv": {"format": "csv"},
@@ -26,13 +26,13 @@ class UNSpider(scrapy.Spider):
             yield scrapy.Request(
                 url=url,
                 callback=self.parse,
-                cb_kwargs={
+                cb_kwargs={"goal": str(goal_number),
                 },
             )
 
-    def parse(self, response):
+    def parse(self, response, **kwargs):
         
-        goal = response.url[30:]
+        goal = kwargs["goal"]
         
         ## get target and indicator-texts
 
@@ -66,7 +66,46 @@ class UNSpider(scrapy.Spider):
                 yield loader.load_item()
 
 
-        # get links of related topics and trigger request if relevant
+        ## extract info-texts
+        # initialize loader
+        loader = ItemLoader(item=UNItem(), selector=response)
+        
+        # add values to loader and trigger items
+        loader.add_value("goal", goal)
+        loader.add_xpath("info_text", "//section[substring(@class, string-length(@class) - string-length('text-formatted') +1) = 'text-formatted']//text()" )
+        
+        # trigger pipeline
+        yield loader.load_item()
 
+
+
+        # get links of related topics and trigger request if relevant
+        related_topics = response.xpath("//div[@class='card-content-topics']")
+        for related_topic in related_topics:
+
+            related_goals = related_topic.xpath(".//div[@class='label-group-content']/span/@class").extract()
+            href = related_topic.xpath("./a/@href").get()
+            
+            if len(related_goals) == 1 and related_goals[0][25:] == goal:
+                url = "https://sdgs.un.org"+href
+                yield scrapy.Request(
+                    url=url,
+                    callback=self.parse_related_topic,
+                    cb_kwargs={ "goal": goal,
+                    },
+                )
+
+    def parse_related_topic(self, response, **kwargs):
+
+        ## extract description-texts
+        # initialize loader
+        loader = ItemLoader(item=UNItem(), selector=response)
+        
+        # add values to loader and trigger items
+        loader.add_value("goal", kwargs["goal"])
+        loader.add_xpath("related_topic_text", "//div[@id='description']/div[@class='row']//text()" )
+        
+        # trigger pipeline
+        yield loader.load_item()
 
 

@@ -4,7 +4,7 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-from itemloaders.processors import TakeFirst, MapCompose
+from itemloaders.processors import TakeFirst, MapCompose, Join
 
 
 def remove_trash(value):
@@ -44,5 +44,30 @@ class UNItem(scrapy.Item):
             remove_trash,
         ),
         output_processor=TakeFirst(),
+    )
+    info_text = scrapy.Field(
+        input_processor=MapCompose(
+            remove_trash,
+        ),
+        output_processor=Join(separator=" "),
+    )
+    related_topic_text = scrapy.Field(
+        input_processor=MapCompose(
+            remove_trash,
+        ),
+        output_processor=Join(separator=" "),
+    )
+    pass
+
+
+class ScholarItem(scrapy.Item):
+    # define the fields for your item here like:
+    goal = scrapy.Field()
+    pdf_header = scrapy.Field()
+    pdf_text = scrapy.Field(
+        input_processor=MapCompose(
+            remove_trash,
+        ),
+        output_processor=Join(separator=" "),
     )
     pass

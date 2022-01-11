@@ -3,6 +3,7 @@ BeautifulSoup4==4.9.3
 selenium==3.141.0
 Scrapy==2.5.0
 scrapy-user-agents==0.1.1
+PyPDF2
 
 # data handling
 validators==0.18.2
