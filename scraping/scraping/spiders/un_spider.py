@@ -1,5 +1,5 @@
 import scrapy
-from tutorial.tutorial.items import UNItem
+from scraping.scraping.items import UNItem
 from scrapy.loader import ItemLoader
 
 
@@ -8,7 +8,7 @@ class UNSpider(scrapy.Spider):
     allowed_domains = ['sdgs.un.org']
     custom_settings = {
         "ITEM_PIPELINES": {
-            "tutorial.tutorial.pipelines.BasicPipeline": 300,
+            "scraping.scraping.pipelines.BasicPipeline": 300,
         },
         "FEEDS": {
             "files/un_data.csv": {"format": "csv"},

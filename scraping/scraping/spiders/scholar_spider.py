@@ -1,6 +1,6 @@
 import scrapy
 from scrapy.loader import ItemLoader
-from tutorial.tutorial.items import ScholarItem
+from scraping.scraping.items import ScholarItem
 import PyPDF2
 import io
 import re
@@ -11,7 +11,7 @@ class ScholarSpider(scrapy.Spider):
     start_urls = ['https://scholar.google.com/scholar?hl=en&q=SDG+Goal+1']
     custom_settings = {
         "ITEM_PIPELINES": {
-            "tutorial.tutorial.pipelines.BasicPipeline": 300,
+            "scraping.scraping.pipelines.BasicPipeline": 300,
         },
         "FEEDS": {
             "files/scholar_data.csv": {"format": "csv"},

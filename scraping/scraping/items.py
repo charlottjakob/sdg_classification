@@ -9,13 +9,14 @@ from itemloaders.processors import TakeFirst, MapCompose, Join
 
 def remove_trash(value):
     # delete paragraphs, and spaces at the beginning and at the end
-    value = value.replace("\n","").strip()
+    value = value.replace("\n","").replace("  "," ").strip()
 
     # if the value is not empty return it
     if value is not "":
         return value
     
     pass
+
 
 class UNItem(scrapy.Item):
     # define the fields for your item here like:
