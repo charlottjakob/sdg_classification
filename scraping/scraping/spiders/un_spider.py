@@ -33,7 +33,7 @@ class UNSpider(scrapy.Spider):
     def parse(self, response, **kwargs):
         
         goal = kwargs["goal"]
-        
+
         ## get target and indicator-texts
 
         # loop through targets and save titles and texts

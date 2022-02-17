@@ -1,7 +1,11 @@
 import pandas as pd
 import os
+import regex as re
 
-print(os.getcwd())
-df = pd.read_csv('files/un_data.csv')
+values = [
+    '{print:hello}Hallo ich bin Charlott.',
+]
 
-print(df)
+for value in values:
+    strings = re.findall(r"[\s\,\p{L}]{10,}\s[\s\,\p{L}\'\"]*[.!?]", value)
+    print(strings)

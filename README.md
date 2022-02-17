@@ -1,5 +1,7 @@
 -create venv
 -create requirements.txt
 -start scrapy project
--build first version of un_spider:
-    
+-build first version of un_spider
+-build first version of schloar-scraping
+-create basic dict out of un_data and scholar_data
+-Add main_plot.ipynb and make basic plots
