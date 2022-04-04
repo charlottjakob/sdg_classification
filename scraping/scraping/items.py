@@ -143,7 +143,13 @@ class UNGlobalCompactItem(scrapy.Item):
         input_processor=MapCompose(extract_sdg),
         output_processor=Join(separator=", "),
     )
+    cop_link = scrapy.Field()
+    file_urls = scrapy.Field()
+    files = scrapy.Field
+    document_file_name = scrapy.Field()
+
     pass
+
 
 class WebsitesItem(scrapy.Item):
     """Item for WebsitesSpider."""
@@ -157,3 +163,8 @@ class WebsitesItem(scrapy.Item):
         output_processor=Join(separator=" "),
     )
     pass
+
+
+class ZipfilesItem(scrapy.Item):
+     file_urls = scrapy.Field()
+     files = scrapy.Field()

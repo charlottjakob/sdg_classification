@@ -1,55 +1,42 @@
+# basic packages
+import pandas as pd
+from pathlib import Path
+import regex as re
+# import tensorflow as tf 
+# import tensorflow_hub as hub
+# import tensorflow_text as text
+
+# local functions
 from training_data.build_basic_dict import combine_un_data
 from training_data.clean_dict import clean_basic
 from training_data.vector_embedding import word2vec
-from training_data.extract_keywords import extract_keywords
-from training_data.tokenize import tokenize_to_sentences
+# from training_data.extract_keywords import extract_keywords
+from utils.tokenize import tokenize_to_sentences
+from test_data.extract_examples import company_to_website_sentences
 
+
+print('start')
 
 df = combine_un_data()
 df = clean_basic(df)
 # df = extract_keywords(df)
 df = tokenize_to_sentences(df)
 
-print('here')
+
+df = tokenize_to_sentences(df)
 
 
-import pandas as pd
-from flair.data import Corpus
-from flair.datasets import CSVClassificationCorpus
-from flair.embeddings import WordEmbeddings, FlairEmbeddings, DocumentLSTMEmbeddings
-from flair.models import TextClassifier
-from flair.trainers import ModelTrainer
-from pathlib import Path
+# down-sampling
+count_sentences_min = min(df.groupby('goal')['goal'].count())
+df= df.groupby('goal').sample(n=count_sentences_min) 
 
-data = df[['goal', 'text']].rename(columns={"goal":"label", "text":"text"})
- 
-data['label'] = '__label__' + data['label'].astype(str)
+df.to_csv('data/training_data.csv')
 
-data.iloc[0:int(len(data)*0.8)].to_csv('files/flair/train.csv', sep='\t', index = False, header = False)
-data.iloc[int(len(data)*0.8):int(len(data)*0.9)].to_csv('files/flair/test.csv', sep='\t', index = False, header = False)
-data.iloc[int(len(data)*0.9):].to_csv('files/flair/dev.csv', sep='\t', index = False, header = False);
+company_to_website_sentences("Beauty Industry Group")
 
-# column format indicating which columns hold the text and label(s)
-column_name_map = {1: "label_topic", 2: "text"}
-data_folder = 'files/flair'
-label_type = 'question_class'
-# load corpus containing training, test and dev data and if CSV has a header, you can skip it
-corpus: Corpus = CSVClassificationCorpus(data_folder=data_folder,
-                                         column_name_map=column_name_map,
-                                         skip_header=True,
-                                         delimiter=',',
-                                         label_type =label_type,    # tab-separated files
-) 
+print('end')
 
-# corpus = NLPTaskDataFetcher.load_classification_corpus(Path('files/flair'), test_file='test.csv', dev_file='dev.csv', train_file='train.csv')
 
-word_embeddings = [WordEmbeddings('glove'), FlairEmbeddings('news-forward-fast'), FlairEmbeddings('news-backward-fast')]
-document_embeddings = DocumentLSTMEmbeddings(word_embeddings, hidden_size=512, reproject_words=True, reproject_words_dimension=256)
-
-classifier = TextClassifier(document_embeddings, label_dictionary=corpus.make_label_dictionary(), multi_label=False, label_type=label_type)
-
-trainer = ModelTrainer(classifier, corpus)
-trainer.train('files/flair', max_epochs=10)
 
 
 

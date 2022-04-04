@@ -1,6 +1,7 @@
 """Functions for vector embedding."""
 import gensim
-from training_data.tokenize import tokenize_to_sentences
+from utils.tokenize import tokenize_to_sentences
+
 
 def word2vec(df):
     """Train word2vec with gensim.

@@ -14,7 +14,7 @@ nltk==3.6.5
 
 # machine learning
 gensim==4.1.2
-flair==0.10
+tensorflow
 
 # visualisation
 matplotlib
