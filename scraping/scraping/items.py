@@ -1,7 +1,7 @@
 """Items for project scraping."""
 
 import scrapy
-from itemloaders.processors import TakeFirst, MapCompose, Join
+from itemloaders.processors import TakeFirst, MapCompose, Join, Identity
 import regex as re
 
 
@@ -18,7 +18,7 @@ def remove_trash(value):
     value = value.replace("\n", "").replace("  ", " ").strip()
 
     # if the value is not empty return it
-    if value != "":
+    if re.match("[A-Za-z]", value):
         return value
 
     pass
@@ -84,15 +84,39 @@ class UNItem(scrapy.Item):
         input_processor=MapCompose(
             remove_trash,
         ),
-        output_processor=Join(separator=" "),
+        output_processor=Join('|||'),
     )
     related_topic_text = scrapy.Field(
         input_processor=MapCompose(
             remove_trash,
         ),
-        output_processor=Join(separator=" "),
+        output_processor=Join('|||'),
     )
     pass
+
+
+class TakeLongest:
+    """Output-processor for company_country in UNGlobalCompactItem."""
+
+    # nothing happens - just magic
+    def __call__(self, values):
+        """Extract the longest text.
+
+        Args:
+            values: all text in <p>
+
+        Returns:
+            longest text
+        """
+        max_len = 0
+        max_text = ""
+        for i, element in enumerate(values):
+            if len(element) > max_len:
+                max_len = len(element)
+                max_text = element
+
+        if max_len > 500:
+            return max_text
 
 
 class ScholarItem(scrapy.Item):
@@ -100,13 +124,35 @@ class ScholarItem(scrapy.Item):
 
     # define the fields for your item here like:
     goal = scrapy.Field()
-    pdf_header = scrapy.Field()
+    paper_header = scrapy.Field()
     pdf_text = scrapy.Field(
         input_processor=MapCompose(
             remove_trash,
         ),
         output_processor=Join(separator=" "),
     )
+    abstract = scrapy.Field(
+        input_processor=MapCompose(
+            remove_trash,
+        ),
+        output_processor=TakeLongest(),
+    )
+    content_url = scrapy.Field()
+
+    pass
+
+
+class WikipediaItem(scrapy.Item):
+    """Item for ScholarSpider."""
+
+    # define the fields for your item here like:
+    text = scrapy.Field(
+        input_processor=MapCompose(
+            remove_trash,
+        ),
+        output_processor=Join('|||'),
+    )
+    term = scrapy.Field()
     pass
 
 
@@ -143,7 +189,8 @@ class UNGlobalCompactItem(scrapy.Item):
         input_processor=MapCompose(extract_sdg),
         output_processor=Join(separator=", "),
     )
-    cop_link = scrapy.Field()
+    document_link = scrapy.Field()
+    document_type = scrapy.Field()
     file_urls = scrapy.Field()
     files = scrapy.Field
     document_file_name = scrapy.Field()
@@ -166,5 +213,7 @@ class WebsitesItem(scrapy.Item):
 
 
 class ZipfilesItem(scrapy.Item):
-     file_urls = scrapy.Field()
-     files = scrapy.Field()
+    """Item for downloading pdf documents."""
+
+    file_urls = scrapy.Field()
+    files = scrapy.Field()

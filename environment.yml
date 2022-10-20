@@ -4,7 +4,7 @@
 # conda activate master_venv
 # conda deactivate
 
-name: master_env
+name: pytorch_env
 channels: 
   - conda-forge
   - defaults
@@ -24,11 +24,15 @@ dependencies:
   - regex==2021.11.10
   - nltk==3.6.5
   - scikit-learn
+  - seaborn==0.11.2
+  - regex==2022.4.24
 
 # machine learning
   - gensim # gensim
   - pytorch
   - torchvision
+  - transformers
+  - optuna==2.10.0
 
 # visualisation
   - matplotlib
