@@ -9,10 +9,10 @@ venv
 .vscode
 .pyc
 
-data
-data_preperation
-scraping
-training
+/data
+/data_preperation
+/scraping
+/training
 # folders
 # /training/text/base_model/cache/*
 # /training/text/base_model/words_not_transformed/*
