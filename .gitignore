@@ -7,9 +7,29 @@ venv
 # IDE files
 .idea
 .vscode
+.pyc
 
-# csv files
-*.csv
-
-# data folder
 data
+data_preperation
+scraping
+training
+# folders
+# /training/text/base_model/cache/*
+# /training/text/base_model/words_not_transformed/*
+# /training/text/transformers/models/*
+# /training/text/transformers/models/pretrained_roberta/*
+
+# files
+*.csv
+*.model
+
+# only keep training datasets
+# !/data
+# /data/*
+# !/data/text_train_1
+# !/data/text_train_2
+# !/data/text_val
+# !/data/text_test
+
+
+# requirements.txt

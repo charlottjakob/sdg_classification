@@ -14,7 +14,7 @@ os.chdir('/Users/charlottjakob/Documents/github_repos/sdg_classification')
 
 
 def seperate_report_pages(n_nosdg_pages):
-    label_data = pd.read_csv('data/report_labeling.csv')
+    label_data = pd.read_csv('data/image_labels_manual.csv')
 
     # delete pdfs that are not reports
     label_data = label_data[label_data['comment'] != 'no report']
@@ -28,11 +28,13 @@ def seperate_report_pages(n_nosdg_pages):
     nosdg_page_df = pd.DataFrame(columns=['file_name'])
     sdg_page_df = pd.DataFrame(columns=['file_name', 'sdgs'])
 
+    test_number = 0
+
     for file_idx, file_name in enumerate(file_names):
         sdg_pages = label_data[(label_data['file_name'] == file_name) & (label_data['page'].notna())]
         sdg_page_numbers = list(sdg_pages['page'].astype('Int64'))
 
-        document_path = f'data/sustainability_reports/{file_name}'
+        document_path = f'data/sustainability_reports_1_500/{file_name}'
 
         if os.path.isfile(document_path):
             # creating a pdf file object
@@ -63,10 +65,11 @@ def seperate_report_pages(n_nosdg_pages):
                     output = PyPDF2.PdfFileWriter()
                     output.addPage(page)
 
-                    page_path = f'data/report_pages_sdg/{file_name}_{page_number}.pdf'
+                    page_path = f'data/image_test/{test_number}.pdf'  # {file_name}_{page_number}
                     with open(page_path, "wb") as output_stream:
                         output.write(output_stream)
 
+                    test_number += 1
                     sdg_page_df = sdg_page_df.append({'file_name': str(file_name) + '_' + str(page_number), 'sdgs': row['sdgs']}, ignore_index=True)
 
                 # # extract pages without sdgs and save in report_pages_nosdg
@@ -95,3 +98,6 @@ def seperate_report_pages(n_nosdg_pages):
     # nosdg_page_df.to_csv('data/report_pages_nosdg/file_names.csv')
     sdg_page_df.to_csv('data/image_test_labels.csv')
 
+
+if __name__ == "__main__":
+    seperate_report_pages(10)
