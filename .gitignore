@@ -7,18 +7,17 @@ venv
 # IDE files
 .idea
 .vscode
-.pyc
+*.pyc
 
-
+# mac files
+.DS_Store
 
 # files
 *.csv
 *.model
 
-
 # data/
 
-data_preperation/
 
 training/
 
@@ -40,4 +39,7 @@ training/
 !/data/text_test.csv
 
 
-# requirements.txt
+requirements.txt
+
+data_preperation/not_in_github/
+data_preperation/text/__pycache__/
