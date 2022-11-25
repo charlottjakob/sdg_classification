@@ -8,7 +8,7 @@ from torch.utils.data import Dataset
 
 
 class TextDataset(Dataset):
-  """Dataset Class."""
+  """Dataset for Fine-Tuning."""
 
   def __init__(self, texts, targets, tokenizer, max_len):
     """Dataset initialization."""
@@ -43,3 +43,15 @@ class TextDataset(Dataset):
         'attention_mask': encoding['attention_mask'].flatten(),
         'targets': torch.tensor(target, dtype=torch.long)
     }
+
+
+class PreTrainDataset(torch.utils.data.Dataset):
+  """Dataset for Pre-Training."""
+  def __init__(self, encodings):
+    self.encodings = encodings
+
+  def __getitem__(self, idx):
+    return {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
+
+  def __len__(self):
+    return len(self.encodings.input_ids)

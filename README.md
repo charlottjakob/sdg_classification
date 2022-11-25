@@ -101,7 +101,7 @@ Using the training, test and validation sets in folder /data it is possible to s
         * data/text_domain.csv
 
 11. Create Further-Pretrained model for each transformer
-    * script: training/text/transformers/pretraining.py
+    * script: training/text/transformers/pretraining/
     * input:
         * data/text_domain.csv
     * output:

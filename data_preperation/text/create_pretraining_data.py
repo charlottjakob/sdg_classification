@@ -3,6 +3,7 @@ import PyPDF2
 import pandas as pd
 import random
 from text_cleaning import base_cleaning
+import re
 
 companies = pd.read_csv('data/reports_approval_manual.csv')
 companies = companies[companies['approved_final'] == 'yes']
@@ -51,5 +52,12 @@ for i, company in companies[:500].iterrows():
 
 text_domain = text_domain[text_domain['text'].notna()]
 text_domain = base_cleaning(text_domain)
+
+text_domain['text'] = text_domain['text'].apply(lambda x: re.sub('[^A-Za-z\s\.]+', ' ', x))  # \'
+text_domain['text'] = text_domain['text'].apply(lambda x: re.sub('(?<=[\.\s])[A-Ya-z](?=[\.\s])', ' ', x))
+text_domain['text'] = text_domain['text'].apply(lambda x: re.sub('(?<![a-z])\.', ' ', x))
+text_domain['text'] = text_domain['text'].apply(lambda x: " ".join(x.split()))
+
+text_domain = text_domain[text_domain['text'].notna()]
 
 text_domain.to_csv('data/text_domain.csv')
