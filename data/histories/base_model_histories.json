@@ -1,0 +1,318 @@
+{
+    "1_glove_svm": {
+        "scaling": {
+            "no_scaling": 0.085995085995086,
+            "StandardScaler": 0.27898137590269856,
+            "RobustScaler": 0.10501193317422436
+        },
+        "balancing": {
+            "original": 0.27898137590269856,
+            "ratio_0.25": 0.27898137590269856,
+            "ratio_0.50": 0.2784522003034901,
+            "ratio_0.75": 0.2838855421686747
+        },
+        "feature_selection": {
+            "no_pca": 0.2838855421686747,
+            "1": 0.17249796582587468,
+            "0.75": 0.17249796582587468,
+            "0.5": 0.17249796582587468
+        },
+        "combination": {
+            "one_vs_rest": 0.2838855421686747,
+            "classifier_chain": 0.16415410385259632
+        },
+        "fine_tuning": [
+            {
+                "c": 1.0,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.2838855421686747
+            },
+            {
+                "c": 1,
+                "loss": "squared_hinge",
+                "with_weight": true,
+                "f1": 0.2834526950621938
+            },
+            {
+                "c": 1,
+                "loss": "hinge",
+                "with_weight": false,
+                "f1": 0.2838855421686747
+            },
+            {
+                "c": 10,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.2838855421686747
+            },
+            {
+                "c": 10,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.2838855421686747
+            },
+            {
+                "c": 10,
+                "loss": "hinge",
+                "with_weight": false,
+                "f1": 0.2838855421686747
+            },
+            {
+                "c": 100,
+                "loss": "hinge",
+                "with_weight": true,
+                "f1": 0.2838855421686747
+            },
+            {
+                "c": 0.01,
+                "loss": "hinge",
+                "with_weight": true,
+                "f1": 0.2819349962207105
+            }
+        ],
+        "final": {
+            "c": 1.0,
+            "loss": "squared_hinge",
+            "with_weight": false,
+            "f1": 0.2838855421686747
+        }
+    },
+    "2_glove_svm": {
+        "scaling": {
+            "no_scaling": 0.26155187445510025,
+            "StandardScaler": 0.3435804701627487,
+            "RobustScaler": 0.2545180722891566
+        },
+        "balancing": {
+            "original": 0.3435804701627487,
+            "ratio_0.25": 0.34146341463414637,
+            "ratio_0.50": 0.3418277680140598,
+            "ratio_0.75": 0.3218588640275387
+        },
+        "feature_selection": {
+            "no_pca": 0.3435804701627487,
+            "1": 0.25540025412960615,
+            "0.75": 0.25540025412960615,
+            "0.5": 0.25540025412960615
+        },
+        "combination": {
+            "one_vs_rest": 0.3435804701627487,
+            "classifier_chain": 0.24805194805194808
+        },
+        "fine_tuning": [
+            {
+                "c": 1.0,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.3435804701627487
+            },
+            {
+                "c": 0.001,
+                "loss": "squared_hinge",
+                "with_weight": true,
+                "f1": 0.345821325648415
+            },
+            {
+                "c": 1,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.34283129805517865
+            },
+            {
+                "c": 10,
+                "loss": "hinge",
+                "with_weight": true,
+                "f1": 0.3435804701627487
+            },
+            {
+                "c": 0.001,
+                "loss": "hinge",
+                "with_weight": false,
+                "f1": 0.3516483516483517
+            },
+            {
+                "c": 0.01,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.35161744022503516
+            },
+            {
+                "c": 1,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.34283129805517865
+            },
+            {
+                "c": 1,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.34283129805517865
+            }
+        ],
+        "final": {
+            "c": 0.001,
+            "loss": "hinge",
+            "with_weight": false,
+            "f1": 0.3516483516483517
+        }
+    },
+    "1_word2vec_svm": {
+        "scaling": {
+            "no_scaling": 0.0030441400304414006,
+            "StandardScaler": 0.31178247734138975,
+            "RobustScaler": 0.030942334739803092
+        },
+        "balancing": {
+            "original": 0.31178247734138975,
+            "ratio_0.25": 0.31178247734138975,
+            "ratio_0.50": 0.3127075158466646,
+            "ratio_0.75": 0.30973184694184996
+        },
+        "feature_selection": {
+            "no_pca": 0.3127075158466646,
+            "1": 0.0030487804878048777,
+            "0.75": 0.0030487804878048777,
+            "0.5": 0.0030487804878048777
+        },
+        "combination": {
+            "one_vs_rest": 0.3127075158466646,
+            "classifier_chain": 0.0030487804878048777
+        },
+        "fine_tuning": [
+            {
+                "c": 1.0,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.3127075158466646
+            },
+            {
+                "c": 1000,
+                "loss": "squared_hinge",
+                "with_weight": true,
+                "f1": 0.3127075158466646
+            },
+            {
+                "c": 0.01,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.3134057971014493
+            },
+            {
+                "c": 1,
+                "loss": "squared_hinge",
+                "with_weight": true,
+                "f1": 0.3127075158466646
+            },
+            {
+                "c": 0.001,
+                "loss": "hinge",
+                "with_weight": true,
+                "f1": 0.3129909365558912
+            },
+            {
+                "c": 0.1,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.3127075158466646
+            },
+            {
+                "c": 0.001,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.31257557436517536
+            },
+            {
+                "c": 1000,
+                "loss": "hinge",
+                "with_weight": true,
+                "f1": 0.3127075158466646
+            }
+        ],
+        "final": {
+            "c": 0.01,
+            "loss": "squared_hinge",
+            "with_weight": false,
+            "f1": 0.3134057971014493
+        }
+    },
+    "2_word2vec_svm": {
+        "scaling": {
+            "no_scaling": 0.23703703703703705,
+            "StandardScaler": 0.3578226113437381,
+            "RobustScaler": 0.2841698841698842
+        },
+        "balancing": {
+            "original": 0.3578226113437381,
+            "ratio_0.25": 0.3590718904526436,
+            "ratio_0.50": 0.3609534619750284,
+            "ratio_0.75": 0.35883495145631067
+        },
+        "feature_selection": {
+            "no_pca": 0.3609534619750284,
+            "1": 0.242274412855377,
+            "0.75": 0.242274412855377,
+            "0.5": 0.242274412855377
+        },
+        "combination": {
+            "one_vs_rest": 0.3609534619750284,
+            "classifier_chain": 0.25983313468414776
+        },
+        "fine_tuning": [
+            {
+                "c": 1.0,
+                "loss": "squared_hinge",
+                "with_weight": false,
+                "f1": 0.3609534619750284
+            },
+            {
+                "c": 1000,
+                "loss": "hinge",
+                "with_weight": false,
+                "f1": 0.3609534619750284
+            },
+            {
+                "c": 0.001,
+                "loss": "hinge",
+                "with_weight": false,
+                "f1": 0.3609534619750284
+            },
+            {
+                "c": 0.01,
+                "loss": "hinge",
+                "with_weight": true,
+                "f1": 0.3609534619750284
+            },
+            {
+                "c": 10,
+                "loss": "squared_hinge",
+                "with_weight": true,
+                "f1": 0.3609534619750284
+            },
+            {
+                "c": 100,
+                "loss": "hinge",
+                "with_weight": true,
+                "f1": 0.3609534619750284
+            },
+            {
+                "c": 1,
+                "loss": "hinge",
+                "with_weight": true,
+                "f1": 0.3609534619750284
+            },
+            {
+                "c": 100,
+                "loss": "hinge",
+                "with_weight": true,
+                "f1": 0.3609534619750284
+            }
+        ],
+        "final": {
+            "c": 1.0,
+            "loss": "squared_hinge",
+            "with_weight": false,
+            "f1": 0.3609534619750284
+        }
+    }
+}
