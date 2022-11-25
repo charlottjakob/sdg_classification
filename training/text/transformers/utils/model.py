@@ -1,5 +1,9 @@
-from torch import nn
+"""Includes Models BERTClassifier, XLNetClassifier and GPT2Classifier."""
+# basics
 import copy
+
+# ml
+from torch import nn
 
 
 class BERTClassifier(nn.Module):

@@ -1,16 +1,19 @@
-from utils.train_evaluate import TrainingClass
-from utils.helper import class_names
 
+# locals
+from utils.train_evaluate import TrainingClass
+from utils.helper import class_names, get_default_device, MAX_LEN
+
+# basics
 import json
-import torch
-import optuna
 import pandas as pd
 import numpy as np
-from utils.helper import get_default_device
-device = get_default_device()
 
-MAX_LEN = 512
-EPOCHS = 1
+# ml
+import torch
+import optuna
+
+
+# select transformer and training dataset
 MODEL_NAME = 'bert'  # 'bert', 'roberta', 'xlnet', 'gpt2'
 NUMBER_TRAIN_DATA = 1
 
@@ -37,8 +40,11 @@ def objective(trial):
 if __name__ == '__main__':
 
     # prints
-    print(f'Start training model: {MODEL_NAME} with dataset {str(NUMBER_TRAIN_DATA)} and {str(EPOCHS)} epochs')
+    print(f'Start training model: {MODEL_NAME} with dataset {str(NUMBER_TRAIN_DATA)}')
     print('-' * 20)
+
+    # get device
+    device = get_default_device()
 
     # load train and val data
     df_train = pd.read_csv(f'data/text_train_{NUMBER_TRAIN_DATA}.csv')

@@ -11,7 +11,7 @@ import re
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-text = pd.read_csv('data/text_domain.csv')[:10]
+text = pd.read_csv('data/text_domain.csv')
 text['text'] = text['text'].apply(lambda x: re.sub('[^A-Za-z\s\.]+', ' ', x))  # \'
 text['text'] = text['text'].apply(lambda x: re.sub('(?<=[\.\s])[A-Ya-z](?=[\.\s])', ' ', x))
 text['text'] = text['text'].apply(lambda x: re.sub('(?<![a-z])\.', ' ', x))

@@ -14,17 +14,18 @@ import json
 import torch
 from transformers import RobertaTokenizer, BertTokenizer, GPT2Tokenizer, XLNetTokenizer
 
+
 # choose models and training data
-MODEL_NAMES = ['bert'] # 'gpt2', 'roberta', 'xlnet'
-DATA_NUMBERS = [1]
+MODEL_NAMES = ['bert', 'gpt2', 'roberta', 'xlnet']
+DATA_NUMBERS = [2]
 
 if __name__ == '__main__':
 
     for model_name in MODEL_NAMES:
 
-        # # reset DataFrame for predictions
-        # df_preds = pd.DataFrame()
-        # df_preds.to_csv(f'data/text_test_results/{model_name}.csv')
+        # reset DataFrame for predictions
+        df_preds = pd.DataFrame()
+        df_preds.to_csv(f'data/text_test_results/{model_name}.csv')
 
         # get device
         device = get_default_device()

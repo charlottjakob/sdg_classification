@@ -8,6 +8,7 @@ import torch
 
 # set classes
 class_names = [str(number) for number in np.arange(1, 18)]
+MAX_LEN = 512
 
 
 # helper functions to load the data and model onto GPU
