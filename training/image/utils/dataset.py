@@ -18,23 +18,22 @@ import torchvision.transforms.functional as F
 IMAGE_SIZE = 1280
 
 
-class SquarePad:
-  def __call__(self, image):
-    max_w = IMAGE_SIZE
-    max_h = IMAGE_SIZE
+class DeviceDataLoader():
+    """Wrap a dataloader to move data to a device."""
 
-    imsize = image.size
-    h_padding = (max_w - imsize[0]) / 2
-    v_padding = (max_h - imsize[1]) / 2
-    l_pad = h_padding if h_padding % 1 == 0 else h_padding + 0.5
-    t_pad = v_padding if v_padding % 1 == 0 else v_padding + 0.5
-    r_pad = h_padding if h_padding % 1 == 0 else h_padding - 0.5
-    b_pad = v_padding if v_padding % 1 == 0 else v_padding - 0.5
+    def __init__(self, dl, device):
+      """Initialize and save variables."""
+      self.dl = dl
+      self.device = device
 
-    padding = (int(l_pad), int(t_pad), int(r_pad), int(b_pad))
+    def __iter__(self):
+      """Yield a batch of data after moving it to device."""
+      for b in self.dl:
+        yield to_device(b, self.device)
 
-    return F.pad(image, padding, 0, 'constant')
-
+    def __len__(self):
+      """Get Number of batches."""
+      return len(self.dl)
 
 
 class ImageDataset(Dataset):
@@ -85,22 +84,6 @@ class ImageDataset(Dataset):
     return target
 
 
-class DeviceDataLoader():
-    """Wrap a dataloader to move data to a device"""
-    def __init__(self, dl, device):
-        self.dl = dl
-        self.device = device
-
-    def __iter__(self):
-        """Yield a batch of data after moving it to device"""
-        for b in self.dl:
-            yield to_device(b, self.device)
-
-    def __len__(self):
-        """Number of batches"""
-        return len(self.dl)
-
-
 class PredictionDataset(Dataset):
   def __init__(self, file_name, transform=None):
 
@@ -130,3 +113,22 @@ class PredictionDataset(Dataset):
     image_transformed = self.transform(img)
 
     return (image_transformed, torch.zeros(17))
+
+
+
+class SquarePad:
+  def __call__(self, image):
+    max_w = IMAGE_SIZE
+    max_h = IMAGE_SIZE
+
+    imsize = image.size
+    h_padding = (max_w - imsize[0]) / 2
+    v_padding = (max_h - imsize[1]) / 2
+    l_pad = h_padding if h_padding % 1 == 0 else h_padding + 0.5
+    t_pad = v_padding if v_padding % 1 == 0 else v_padding + 0.5
+    r_pad = h_padding if h_padding % 1 == 0 else h_padding - 0.5
+    b_pad = v_padding if v_padding % 1 == 0 else v_padding - 0.5
+
+    padding = (int(l_pad), int(t_pad), int(r_pad), int(b_pad))
+
+    return F.pad(image, padding, 0, 'constant')

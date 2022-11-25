@@ -19,18 +19,20 @@ def to_device(data, device):
     return data.to(device, non_blocking=True)
 
 
-def F_score(output, label, threshold=0.5, beta=1):  # Calculate the accuracy of the model
+def F_score(output, label, threshold=0.5, beta=1):
+    """Calculate F1-score."""
+    # divide otputs to True and False
     prob = output > threshold
+
+    # transform 0/1 to True and False
     label = label > threshold
-    # print('output: ', output)
-    # print('labels: ', label)
 
     true_positive = (prob & label).sum(1).float()
-    # TN = ((~prob) & (~label)).sum(1).float()
     false_positive = (prob & (~label)).sum(1).float()
     false_negative = ((~prob) & label).sum(1).float()
 
     precision = torch.mean(true_positive / (true_positive + false_positive + 1e-12))
     recall = torch.mean(true_positive / (true_positive + false_negative + 1e-12))
     f_score = (1 + beta**2) * precision * recall / (beta**2 * precision + recall + 1e-12)
+
     return f_score.mean(0)
