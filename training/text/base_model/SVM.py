@@ -1,4 +1,4 @@
-"""Train SVM and predict test datase."""
+"""Train SVM and predict test data."""
 # from local
 from utils.text_processing import text_preprocessing, text_transfrom
 from utils.utils import class_names
@@ -15,9 +15,9 @@ import optuna
 
 
 # Define main settings
-EMBEDDING_MODELs = ['glove', 'word2vec']  # choose from ['glove', 'word2vec']
-NUMBER_TRAIN_DATAs = [2]  # choose from [1, 2]
-TRANSFORM = True  # choose True or False
+EMBEDDING_MODELs = ['glove', 'word2vec']
+NUMBER_TRAIN_DATAs = [1, 2]
+TRANSFORM = True  # choose False if wordvectors already created and saved
 
 
 def objective(trial):
@@ -27,6 +27,7 @@ def objective(trial):
     loss = trial.suggest_categorical('loss', ['hinge', 'squared_hinge'])
     with_weight = trial.suggest_categorical('with_weight', [True, False])
 
+    # train
     f1, _ = train_instance.train(
         balance_opt=best_balance_opt,
         pca_opt=best_pca_opt,
@@ -47,7 +48,7 @@ if __name__ == '__main__':
 
     for EMBEDDING_MODEL in EMBEDDING_MODELs:
 
-        # reset DataFrame for predictions
+        # reset result DataFrame for predictions
         df_preds = pd.DataFrame()
         df_preds.to_csv(f'data/text_test_results/{EMBEDDING_MODEL}_svm.csv')
 
@@ -62,19 +63,19 @@ if __name__ == '__main__':
                 # vector_size = 300
 
             # Load data
-            train = pd.read_csv(f'data/text_train_{NUMBER_TRAIN_DATA}.csv')  # .sample(frac=0.2).reset_index(drop=True)
+            train = pd.read_csv(f'data/text_train_{NUMBER_TRAIN_DATA}.csv')
             val = pd.read_csv('data/text_val.csv')
-            test = pd.read_csv('data/text_test.csv')  # .reset_index(drop=True)
+            test = pd.read_csv('data/text_test.csv')
 
             # preprocess data
             train = text_preprocessing(train, lemmantization=False, stop_words=False, lower_case=True)
             val = text_preprocessing(val, lemmantization=False, stop_words=False, lower_case=True)
             test = text_preprocessing(test, lemmantization=False, stop_words=False, lower_case=True)
 
-            # Glove set II: lemmantization=False, stop_words=False, lower_case=False -> 0.14
-            # Glove set II: lemmantization=False, stop_words=False, lower_case=True -> 0.024
-            # Glove set II: lemmantization=False, stop_words=True, lower_case=True -> 0.041
-            # Glove set II: lemmantization=True, stop_words=True, lower_case=True ->  0.133
+            # Glove set II: lemmantization=False, stop_words=False, lower_case=False -> ratio: 0.14
+            # Glove set II: lemmantization=False, stop_words=False, lower_case=True -> ratio: 0.024
+            # Glove set II: lemmantization=False, stop_words=True, lower_case=True -> ratio: 0.041
+            # Glove set II: lemmantization=True, stop_words=True, lower_case=True ->  ratio: 0.133
 
             # creat paths for save/load word vectors
             train_path = f'training/text/base_model/cache/text_train_{NUMBER_TRAIN_DATA}_{EMBEDDING_MODEL}.npy'
@@ -100,13 +101,13 @@ if __name__ == '__main__':
 
                 # transform and save val
                 print(f'start transforming val {NUMBER_TRAIN_DATA}')
-                X_val, words_not_in_vocab = text_transfrom(val['text'], embedding_model)
+                X_val, _ = text_transfrom(val['text'], embedding_model)
                 np.save(val_path, X_val)
                 print('vectors created and saved')
 
                 # transform and save test
                 print(f'start transforming test {NUMBER_TRAIN_DATA}')
-                X_test, words_not_in_vocab = text_transfrom(test['text'], embedding_model)
+                X_test, _ = text_transfrom(test['text'], embedding_model)
                 np.save(test_path, X_test)
                 print('vectors created and saved')
 
@@ -122,6 +123,7 @@ if __name__ == '__main__':
             y_val = val[class_names].values
             y_test = test[class_names].values
 
+            # initialize Training class
             train_instance = TrainingClass(
                 train=train,
                 X_train=X_train,
@@ -134,12 +136,14 @@ if __name__ == '__main__':
 
         # 1. Scaling
 
+            # define scaling options
             scaling_options = ['no_scaling', 'StandardScaler', 'RobustScaler']
             scaling_results = {}
 
             # for each option scale X, train SVM and save result in scaling_results
             for scale_opt in scaling_options:
 
+                # train with respective scaling option
                 f1, _ = train_instance.train(
                     balance_opt='original',
                     pca_opt='no_pca',
@@ -158,7 +162,7 @@ if __name__ == '__main__':
             best_scale_opt = max(scaling_results, key=scaling_results.get)
             best_f1 = scaling_results[best_scale_opt]
 
-            # print
+            # print best Scaling
             print(scaling_results)
             print('Best Scaling Methode: ', best_scale_opt, ' Best F1 Score: ', best_f1)
             print('_' * 10)
@@ -175,6 +179,7 @@ if __name__ == '__main__':
             # for each option filter data from option and train SVM
             for balance_opt in balance_options:
 
+                # train with respective balance option
                 f1, _ = train_instance.train(
                     balance_opt=balance_opt,
                     pca_opt='no_pca',
@@ -237,6 +242,7 @@ if __name__ == '__main__':
             # initialize result dict with previously best f1 using OneVsRestClassifier
             comb_results = {'one_vs_rest': best_f1}
 
+            # Train with Classifier Chain
             f1, _ = train_instance.train(
                 balance_opt=best_balance_opt,
                 pca_opt=pca_opt,
@@ -269,15 +275,13 @@ if __name__ == '__main__':
             study.optimize(objective, n_trials=7)
 
             # get best trial
-            # trial = study.best_trial
-
             best_opt_number = np.argmax([trial['f1'] for trial in fine_tuning_history])
             best_opt = fine_tuning_history[best_opt_number]
 
             # print best_opt
             print('Best Fine_Tuning Opt: ', best_opt)
 
-        # Predict
+        # Final Run and Prediction
 
             # train and predict
             _, y_pred = train_instance.train(

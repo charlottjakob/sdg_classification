@@ -1,12 +1,15 @@
+
+# basics
 import re
-# from .utils import max_len
 import numpy as np
-import nltk
-import os
-from nltk.stem.snowball import SnowballStemmer
 from collections import Counter
+
+# data processing
+import nltk
+from nltk.stem.snowball import SnowballStemmer
 nltk.download('stopwords')
 stopwords = set(nltk.corpus.stopwords.words('english'))
+
 
 def text_preprocessing(df, lemmantization=False, stop_words=False, lower_case=False):
     # only keep letters and spaces
@@ -69,7 +72,12 @@ def text_transfrom(text_series, embedding_model):
     # Count occurence of words that are not transformed
     dict_words_not_transformed = Counter(words_not_in_vocab)
     amount_not_transformed = sum(dict_words_not_transformed.values())
+
+    # print amount of unique strings
     print('amount of unique words in dataset: ', len(word_collection))
+
+    # print ratio of untranslated words
     print('words not transformed amount: ', amount_not_transformed, ' percentage: ', '{}.3f'.format(amount_not_transformed / word_count))
 
+    # terun transformed X, not transfromed words
     return X_feature_space, dict_words_not_transformed

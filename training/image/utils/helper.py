@@ -1,6 +1,8 @@
 import torch
 
 
+classes = range(1, 18)
+
 # helper functions to load the data and model onto GPU
 def get_default_device():
     """Pick GPU if available, else CPU"""

@@ -1,13 +1,22 @@
+
+# locals
 from .helper import to_device
 
-import torchvision.transforms as transforms
+# basics
 import pandas as pd
+
+# image
+from pdf2image import convert_from_path
+
+# ml
+import torchvision.transforms as transforms
 import torch
 from torch.utils.data import Dataset
 import torchvision.transforms.functional as F
-from pdf2image import convert_from_path
+
 
 IMAGE_SIZE = 1280
+
 
 class SquarePad:
   def __call__(self, image):
@@ -27,12 +36,6 @@ class SquarePad:
     return F.pad(image, padding, 0, 'constant')
 
 
-# with h_pdf=210 und w_pdf=297
-transform_to_size = int(210 * IMAGE_SIZE / 297)
-transform_compose = transforms.Compose([transforms.Resize(size=transform_to_size, max_size=IMAGE_SIZE),
-                                        SquarePad(),
-                                        transforms.ToTensor()])
-
 
 class ImageDataset(Dataset):
   def __init__(self, file_name_annotations, folder_name_pdfs, transform=True):
@@ -40,6 +43,12 @@ class ImageDataset(Dataset):
     # read annotations
     self.annotations = pd.read_csv(f'data/{file_name_annotations}.csv')[:5]
     self.root_dir = f'data/{folder_name_pdfs}'
+
+    # with h_pdf=210 und w_pdf=297
+    transform_to_size = int(210 * IMAGE_SIZE / 297)
+    transform_compose = transforms.Compose([transforms.Resize(size=transform_to_size, max_size=IMAGE_SIZE),
+                                            SquarePad(),
+                                            transforms.ToTensor()])
 
     # 210*max size / 297 mit h_pdf=210 und w_pdf=297
     self.transform = transform_compose if transform else False
@@ -97,6 +106,13 @@ class PredictionDataset(Dataset):
 
     # read annotations
     file_path = 'data/sustainability_reports_500_1500/' + str(file_name)
+
+    # with h_pdf=210 und w_pdf=297
+    transform_to_size = int(210 * IMAGE_SIZE / 297)
+    transform_compose = transforms.Compose([transforms.Resize(size=transform_to_size, max_size=IMAGE_SIZE),
+                                            SquarePad(),
+                                            transforms.ToTensor()])
+
     self.transform = transform_compose if transform else False
 
     # open PDF-Reader
