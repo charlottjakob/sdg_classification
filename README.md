@@ -1,17 +1,21 @@
+# SDG Classification
+
 This repository includes the code for classifying SDG in companies' sustainability reports as explained in a master thesis.
 The following steps need to be done in oder to recreate the results.
 
 Using the training, test and validation sets in folder /data it is possible to start at Step 9: Train and test SVM
 
 
+## Steps
+
 1. Scraping: Run all spiders
-    scripts: /scraping/scraping/spiders
-    output: 
-        un_data, 
-        scholar_data, 
-        wikipedia_data, 
-        un_global_compact_data_1_500, 
-        un_global_compact_data_500_1500
+    * scripts: /scraping/scraping/spiders
+    * output: 
+        * un_data, 
+        * scholar_data, 
+        * wikipedia_data, 
+        * un_global_compact_data_1_500, 
+        * un_global_compact_data_500_1500
 
 
 2. Manuall Labeling of 250 sustainability reports
