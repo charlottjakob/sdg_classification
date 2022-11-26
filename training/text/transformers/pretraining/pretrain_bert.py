@@ -1,11 +1,11 @@
 # local
-from utils.dataset import PreTrainDataset
+from util import PreTrainDataset
 
-# basics
 import pandas as pd
 import random
 
 # ml
+
 import torch
 from tqdm import tqdm
 from transformers import AdamW
@@ -13,10 +13,10 @@ from transformers import BertTokenizer, BertForPreTraining
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-EPOCHS = 10
+EPOCHS = 1  # 10
 
 # load data
-text = pd.read_csv('data/text_domain.csv')['text']
+text = pd.read_csv('data/text_domain.csv')['text'][:10]
 
 # download model and tokenizer
 model = BertForPreTraining.from_pretrained('bert-base-uncased')

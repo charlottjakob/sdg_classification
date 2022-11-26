@@ -1,5 +1,5 @@
 # local
-from utils.dataset import PreTrainDataset
+from util import PreTrainDataset
 
 # basics
 import pandas as pd
@@ -16,7 +16,7 @@ EPOCHS = 10
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # load data
-text = pd.read_csv('data/text_domain.csv')['text']
+text = pd.read_csv('data/text_domain.csv')['text'].tolist()
 
 # load model and tokenizer
 model = GPT2LMHeadModel.from_pretrained("gpt2")
@@ -55,7 +55,7 @@ for epoch in range(EPOCHS):
 
         # pass through model
         outputs = model(
-            input_ids=attention_mask,
+            input_ids=input_ids,
             attention_mask=attention_mask,
             labels=input_ids
         )

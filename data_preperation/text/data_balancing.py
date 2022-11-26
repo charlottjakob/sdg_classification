@@ -5,18 +5,24 @@ import random
 # specific
 import translators as ts
 
-CLASS_NAMES = [str(number) for number in np.arange(1, 18)]
-
 
 def balance_with_ratio(df, ratios):
     df_os = df.copy()
 
+    # set class names
+    class_names = [str(number) for number in np.arange(1, 18)]
+
+    # start with calculating the ratio ot the original dataset
     ratio_current = get_current_ratio(df)
+
+    # creat a column with ones to know afterwards that these samples are the original samples
     df['original'] = 1
 
-    # add original to ratio list which represants original dataset without balancing
-    ratio_float_dict = {0: 'original'}
-    ratio_col_dict = {0: 'original'}
+    # add original to ratio lists that it can be treated as previous ratio in the following
+    ratio_float_dict = {0: 'original'}  # used if float is required
+    ratio_col_dict = {0: 'original'}  # used if name of the column is required
+
+    # add first ratio
     for i, ratio in enumerate(ratios):
         ratio_float_dict[i + 1] = ratio
         ratio_col_dict[i + 1] = 'ratio_{0:.2f}'.format(ratio)
@@ -33,23 +39,26 @@ def balance_with_ratio(df, ratios):
 
         # initialize variable to be set True if balancing isn't improving the ratio anymore
         stop_balancing = False
+
+        # while wanted ratio isn't reached repead undersampling and oversampling
         while ratio_current <= ratio_float and stop_balancing is False:
-            # undersample
-            sdg_max = df[df[ratio_col] == 1][CLASS_NAMES].sum(axis=0).idxmax()
+
+            # Undersample
+            # get sdg with max frequency
+            sdg_max = df[df[ratio_col] == 1][class_names].sum(axis=0).idxmax()
 
             # find a sample with the smallest amount of positive labels in target to avoid deleting minority classes
-            sdg_counts_including_sdg_max = df[(df[ratio_col] == 1) & (df[sdg_max] == 1)][CLASS_NAMES].sum(axis=1)
+            sdg_counts_including_sdg_max = df[(df[ratio_col] == 1) & (df[sdg_max] == 1)][class_names].sum(axis=1)
             idx = sdg_counts_including_sdg_max.idxmin()
 
             # mark sample to be not in ratio
-            # df = df.drop(index=idx)
             df.at[idx, ratio_col] = 0
 
-            # oversample 2x
+            # Oversample 2x
             for i in range(2):
 
                 # get sample of minority class
-                sdg_min = df[df[ratio_col] == 1][CLASS_NAMES].sum(axis=0).idxmin()
+                sdg_min = df[df[ratio_col] == 1][class_names].sum(axis=0).idxmin()
                 sample = df_os[(df_os[sdg_min] == 1)].sample()
 
                 # get random language for translation
@@ -70,32 +79,23 @@ def balance_with_ratio(df, ratios):
                     print('failed, len: ', len(sample['text'].item()), ' lang: ', lang_foreign)
                     print('Error: ', e)
 
+            # get new ratio
             ratio_current = get_current_ratio(df[df[ratio_col] == 1])
-
-        #     # update current ratio
-        #     ratio_new = get_current_ratio(df[df[ratio_col] == 1])
-        #     if ratio_new > ratio_current:
-        #         ratio_current = ratio_new
-        #     else:
-        #         stop_balancing = True
-        #         df.rename(columns={ratio_col: 'ratio_{0:.2f}'.format(ratio_current)})
-        #         print('Stopped with highest possible ratio: ', '{0:.2f}'.format(ratio_current))
-
-        # if stop_balancing is True:
-        #     # stop balancing
-        #     break
 
     return df.fillna(0)
 
 
 def get_current_ratio(df):
 
+    # set class names
+    class_names = [str(number) for number in np.arange(1, 18)]
+
     # find amount of datapoints in majority class
-    sdg_max = df[CLASS_NAMES].sum(axis=0).idxmax()
+    sdg_max = df[class_names].sum(axis=0).idxmax()
     sdg_max_n = len(df[df[sdg_max] == 1.0])
 
     # find amount of datapoints in minority class
-    sdg_min = df[CLASS_NAMES].sum(axis=0).idxmin()
+    sdg_min = df[class_names].sum(axis=0).idxmin()
     sdg_min_n = len(df[df[sdg_min] == 1.0])
 
     # return ratio

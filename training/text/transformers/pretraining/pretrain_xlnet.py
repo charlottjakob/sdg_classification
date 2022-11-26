@@ -1,10 +1,9 @@
 # local
-from utils.dataset import PreTrainDataset
+from util import PreTrainDataset
 
 # basics
 import pandas as pd
 import random
-import re
 
 # ml
 import torch
@@ -18,7 +17,7 @@ EPOCHS = 10
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # load data
-text = pd.read_csv('data/text_domain.csv')['text']
+text = pd.read_csv('data/text_domain.csv')['text'].tolist()
 
 # download model and tokenizer
 model = XLNetLMHeadModel.from_pretrained('xlnet-base-cased')
@@ -92,7 +91,7 @@ for epoch in range(EPOCHS):
 
         # pass through model
         outputs = model(
-            input_ids,
+            input_ids=input_ids,
             perm_mask=perm_mask,
             target_mapping=target_mapping,
             labels=labels

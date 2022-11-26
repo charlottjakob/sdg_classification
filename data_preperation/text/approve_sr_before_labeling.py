@@ -15,12 +15,12 @@ os.chdir('/Users/charlottjakob/Documents/github_repos/sdg_classification')
 
 # define parameters
 amount_pages = 3
-# amount_reports = 1500
+
 
 def filter_reports_regarding_extractability_and_language(amount_pages=3):
 
     # load file_names from csv
-    df_reports = pd.read_csv('data/un_global_compact_data_500_1500.csv') # amount_reports
+    df_reports = pd.read_csv('data/un_global_compact_data_500_1500.csv')
     df_reports = df_reports[['document_file_name']]
 
     for i, report in df_reports.iterrows():
@@ -71,7 +71,6 @@ def filter_reports_regarding_extractability_and_language(amount_pages=3):
             else:
                 # set approved to no
                 df_reports.at[i, 'approved'] = 'no'
-
 
             # print to see progress
             print('done: ', i)

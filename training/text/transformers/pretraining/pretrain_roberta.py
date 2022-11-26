@@ -1,5 +1,5 @@
 # local
-from utils.dataset import PreTrainDataset
+from util import PreTrainDataset
 
 # basics
 import pandas as pd
@@ -18,7 +18,7 @@ EPOCHS = 10
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # load data
-text = pd.read_csv('data/text_domain.csv')['text'][:10]
+text = pd.read_csv('data/text_domain.csv')['text'].tolist()
 
 # load model and tokenizer
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
