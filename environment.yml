@@ -4,7 +4,7 @@
 # conda activate master_venv
 # conda deactivate
 
-name: master_env
+name: sdg_env
 channels: 
   - conda-forge
   - defaults
@@ -30,6 +30,9 @@ dependencies:
   - regex
   - langdetect
   - translators
+
+# databases
+  - pymongo
 
 # machine learning
   - gensim
@@ -57,4 +60,5 @@ dependencies:
   - pip:
     - scrapy-user-agents==0.1.1
     - scikit-multilearn
+    - pymupdf
 

@@ -18,7 +18,7 @@ def remove_trash(value):
     value = value.replace("\n", "").replace("  ", " ").strip()
 
     # if the value is not empty return it
-    if re.match("[A-Za-z]", value):
+    if re.match("[A-Za-z1-9]", value):
         return value
 
     pass
@@ -156,44 +156,36 @@ class WikipediaItem(scrapy.Item):
     pass
 
 
-class TakeCountry:
-    """Output-processor for company_country in UNGlobalCompactItem."""
-
-    # nothing happens - just magic
-    def __call__(self, values):
-        """Extract the element after Country:.
-
-        Args:
-            values: to be processed
-
-        Returns:
-            country
-        """
-        for i, element in enumerate(values):
-            if 'Country' in element:
-                country = values[i + 1]
-                return country
-
-
 class UNGlobalCompactItem(scrapy.Item):
     """Item for UNGlobalCompactSpider."""
 
     # define the fields for your item here like:
-    company_name = scrapy.Field()
-    company_website = scrapy.Field()
+    company_name = scrapy.Field(output_processor=TakeFirst())
+    company_website = scrapy.Field(output_processor=TakeFirst())
     company_country = scrapy.Field(
         input_processor=MapCompose(remove_trash),
-        output_processor=TakeCountry(),
+        output_processor=TakeFirst()
     )
+    company_sector = scrapy.Field(output_processor=TakeFirst())
+    company_type = scrapy.Field(output_processor=TakeFirst())
     sdgs = scrapy.Field(
         input_processor=MapCompose(extract_sdg),
         output_processor=Join(separator=", "),
     )
-    document_link = scrapy.Field()
-    document_type = scrapy.Field()
+    document_link = scrapy.Field(output_processor=TakeFirst())
+    document_type = scrapy.Field(output_processor=TakeFirst())
+    document_reporting_period = scrapy.Field(
+        input_processor=MapCompose(remove_trash),
+        output_processor=TakeFirst()
+    )
+    document_publication_date = scrapy.Field(
+        output_processor=TakeFirst()
+    )
+    document_file_name = scrapy.Field(output_processor=TakeFirst())
+    
+    # required for DownloadPipelines
     file_urls = scrapy.Field()
-    files = scrapy.Field
-    document_file_name = scrapy.Field()
+    files = scrapy.Field()
 
     pass
 
