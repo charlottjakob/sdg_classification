@@ -41,6 +41,7 @@ dependencies:
   - transformers==4.23.1
   - huggingface_hub==0.10.0 # needs to be updated after installing transformers, if not -> error
   - optuna==2.10.0
+  - captum
   - sentencepiece # for xlnet tokenizer
 
 # visualisation
@@ -48,6 +49,7 @@ dependencies:
   - plotly
   - nbformat
   - wordcloud
+  - pprintpp
 
 # linting
   - flake8==4.0.1
